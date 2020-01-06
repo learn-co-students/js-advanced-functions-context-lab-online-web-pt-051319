@@ -1,5 +1,58 @@
 /* Your Code Here */
 
+let createEmployeeRecord = function(employee) {
+  return {
+    firstName: employee[0],
+    familyName: employee[1],
+    title: employee[2],
+    payPerHour: employee[3],
+    timeInEvents: [],
+    timeOutEvents: []
+  };
+};
+
+let createEmployeeRecords = function(employees) {
+  return employees.map(createEmployeeRecord);
+};
+
+let createTimeInEvent = function(dateTime) {
+  this.timeInEvents.push({
+    type: "TimeIn",
+    date: dateTime.split(" ")[0],
+    hour: parseInt(dateTime.split(" ")[1])
+  });
+  return this;
+};
+
+function createTimeOutEvent(dateTime) {
+  this.timeOutEvents.push({
+    type: "TimeOut",
+    date: dateTime.split(" ")[0],
+    hour: parseInt(dateTime.split(" ")[1])
+  });
+  return this;
+}
+
+function hoursWorkedOnDate(date) {
+  const timeInEvent = this.timeInEvents.find(event => event.date === date);
+  const timeOutEvent = this.timeOutEvents.find(event => event.date === date);
+  return (timeOutEvent.hour - timeInEvent.hour) / 100;
+}
+
+function wagesEarnedOnDate(date) {
+  return hoursWorkedOnDate.call(this, date) * this.payPerHour;
+}
+
+function calculatePayroll(employees) {
+  return employees.reduce(
+    (memo, employee) => allWagesFor.call(employee) + memo,
+    0
+  );
+}
+
+function findEmployeeByFirstName(srcArray, firstName) {
+  return srcArray.find(employee => employee.firstName === firstName);
+}
 /*
  We're giving you this function. Take a look at it, you might see some usage
  that's new and different. That's because we're avoiding a well-known, but
@@ -9,14 +62,17 @@
  for you to use if you need it!
  */
 
-let allWagesFor = function () {
-    let eligibleDates = this.timeInEvents.map(function (e) {
-        return e.date
-    })
+let allWagesFor = function() {
+  let eligibleDates = this.timeInEvents.map(function(e) {
+    return e.date;
+  });
 
-    let payable = eligibleDates.reduce(function (memo, d) {
-        return memo + wagesEarnedOnDate.call(this, d)
-    }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
+  let payable = eligibleDates.reduce(
+    function(memo, d) {
+      return memo + wagesEarnedOnDate.call(this, d);
+    }.bind(this),
+    0
+  ); // <== Hm, why did we need to add bind() there? We'll discuss soon!
 
-    return payable
-}
+  return payable;
+};
